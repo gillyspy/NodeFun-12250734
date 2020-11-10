@@ -3,10 +3,11 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations" :[
+    "nothing" : ""
+   /* "configurations" :[
         {
              "console":"internalConsole", //"integratedTerminal",
-            "internalConsoleOptions": "openOnSessionStart", //"neverOpen",
+            "internalConsoleOptions": "neverOpen", // "openOnSessionStart", //"neverOpen",
             "name": "nodemon",
             "program": "app.js",
             "request": "launch",
@@ -17,9 +18,9 @@
                 "<node_internals>/**"
             ],
             "type":"node"  //,  //"pwa-node"
-         /*  , "localRoot": "${workspaceFolder}",
+           , "localRoot": "${workspaceFolder}",
             "autoAttachChildProcesses": true ,
-             "trace": "verbose"*/
+             "trace": "verbose"
         },
         {
             "type" : "node",
@@ -38,5 +39,5 @@
             ],
             "program": "${workspaceFolder}/app.js"
         }
-    ]
+    ]*/
 }
