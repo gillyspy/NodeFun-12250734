@@ -1,8 +1,23 @@
-const { RSA_NO_PADDING } = require("constants");
-const fs = require("fs");
-const http = require("http");
-const { parse } = require("path");
-const routes = require("./routes.js");
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
 
-const server = http.createServer(routes);
-server.listen(3001);
+const rootDir = require('./util/path.js');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin.js');
+const shopRoutes = require('./routes/shop.js');
+
+app.use(bodyParser.urlencoded({extended : false}));
+app.use(express.static( path.join(__dirname, 'pub')));
+
+app.use('/admin', adminRoutes);
+app.use(shopRoutes)
+
+app.use((req,res,next)=>{
+   console.log('404');
+   res.status(404).sendFile( path.join( rootDir,'views','404.html'));
+});
+
+app.listen(3000);
