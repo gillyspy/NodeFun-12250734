@@ -3,19 +3,19 @@ const fs = require("fs");
 const requestHandler = (req, res) => {
   const url = req.url;
   const method = req.method;
-  let body = "";
+  let body;
   if (url === "/") {
     body = `<body><form action="/message" method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>`;
   } else if (url === "/message" && method === "POST") {
     const bodychunk = [];
     req.on("data", (chunk) => {
-      //console.log(chunk)
+      console.log(chunk)
       bodychunk.push(chunk);
     });
     return req.on("end", () => {
-      const parsedBody = Buffer.concat(bodychunk).toString();
-      console.log(parsedBody);
+      const parsedBody = Buffer.concat(bodychunk).toString();  
       const message = parsedBody.split("=")[1];
+      console.log(message); //
       fs.writeFile("message.txt", message, (err) => {
         res.statusCode = 302;
         res.setHeader("Location", "/");
