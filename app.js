@@ -7,7 +7,11 @@ const rootDir = require("./util/path.js");
 
 const app = express();
 
-app.engine("hbs", expressHbs()); //handlebars
+app.engine("hbs", expressHbs({ 
+    layoutsDir: 'views/layouts',
+    defaultLayout : 'main-layout',
+    extname : 'hbs'
+})); //handlebars
 app.set("view engine", "hbs");
 app.set("views", process.cwd() + "/views");
 

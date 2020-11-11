@@ -10,6 +10,7 @@
     "typescript.referencesCodeLens.enabled": true,
     "typescript.referencesCodeLens.showOnAllFunctions": true,
     "javascript.referencesCodeLens.showOnAllFunctions": true,
-    "typescript.implementationsCodeLens.enabled": true
+    "typescript.implementationsCodeLens.enabled": true,
+    "editor.formatOnSave": true
   }
 }
