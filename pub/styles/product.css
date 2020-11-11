@@ -1,37 +1,40 @@
-
-.product-form {
-    width : 20rem;
-    max-width: 90%;
-    margin: auto;
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: stretch;
 }
 
-.form-control {
-    margin : 1rem 0;
+.card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 }
 
-.form-control label,
-.form-control input {
-    display: block;
-    width : 100%;
+.card__header,
+.card__content {
+  padding: 1rem;
 }
 
-.form-control input {
-    border : 1px solid #bdb76b;
-    font : inherit;
-    border-radius: 2px;
+.card__header h1,
+.card__content h1,
+.card__content h2,
+.card__content p {
+  margin: 0;
 }
 
-.form-control button  {
-    font : inherit;
-    border : 1px solid blue;
-    color : blue;
-    background : white;
-    border-radius : 3px;
-    cursor: pointer;          
+.card__image {
+  width: 100%;
 }
 
-button:hover,
-button:active {
-  background-color: blue;
-  color : white;
+.card__image img {
+  width: 100%;
+}
+
+.card__actions {
+  padding: 1rem;
+  text-align: center;
+}
+
+.card__actions button,
+.card__actions a {
+  margin: 0 0.25rem;
 }
