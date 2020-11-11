@@ -25,7 +25,26 @@
     "body-parser": "^1.19.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
-    "express-handlebars": "^5.2.0",
+    "express-handlebars": "^3.0.2",
     "pug": "^3.0.0"
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "overrides": [
+      {
+        "files": "*.js",
+        "options": {
+          "trailingComma": "es5"
+        }
+      },
+      {
+        "files": "*.hbs",
+        "options": {
+          "singleQuote": false
+        }
+      }
+    ]
   }
 }
