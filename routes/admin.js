@@ -15,7 +15,7 @@ router.get("/add-product", (req, res, next) => {
     CSS : {
       formsCSS : true
     }
-  });
+  })
 });
 router.post("/add-product", (req, res, next) => {
   products.push({ title: req.body.title, description : req.body.description });
