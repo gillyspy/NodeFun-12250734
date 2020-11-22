@@ -13,8 +13,8 @@ router.get('/', (req, res, next) => {
     size: products.length,
     activeShop: true,
     productCSS: true,
-    formCSS: true,
-    activeAddProduct: true,
+    formsCSS: true,
+    activeAddProduct: true
   };
 
   res.render('shop', shop);
