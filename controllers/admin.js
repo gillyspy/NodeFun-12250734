@@ -1,4 +1,3 @@
-/* all product logic */
 const Product = require('../models/Product');
 
 exports.getAddProduct = (req, res, next) => {
@@ -19,11 +18,11 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  const products = Product.fetchAll((products) => {
-    const shop = {
+  Product.fetchAll((products) => {
+    res.render('admin/product-list', {
       catalogue: products,
-      pageTitle: 'Shop',
-      path: '/',
+      pageTitle: 'Admin Products',
+      path: '/admin/product-list',
       size: products.length,
       activeShop: true,
       CSS: {
@@ -31,8 +30,6 @@ exports.getProducts = (req, res, next) => {
         productCSS: true,
       },
       activeAddProduct: true,
-    };
-
-    res.render('shop/product-list', shop);
+    });
   });
 };
