@@ -12,7 +12,9 @@ router.get("/add-product", (req, res, next) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     activeProduct : true,
-    formsCSS : true
+    CSS : {
+      formsCSS : true
+    }
   });
 });
 router.post("/add-product", (req, res, next) => {

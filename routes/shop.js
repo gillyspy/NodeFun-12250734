@@ -10,10 +10,13 @@ router.get('/', (req, res, next) => {
   const shop = {
     catalogue: products,
     pageTitle: 'Shop',
+    path : '/',
     size: products.length,
     activeShop: true,
-    productCSS: true,
-    formsCSS: true,
+    CSS : {
+      formsCSS : true,
+      productCSS : true
+    },
     activeAddProduct: true
   };
 
