@@ -1,5 +1,5 @@
 /* all product logic */
-const products = [];
+const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
   res.render('add-product', {
@@ -13,12 +13,14 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-  products.push({title: req.body.title, description: req.body.description});
-  console.log('perhaps adding product in the database?', products);
+    const product = new Product(req.body.title, req.body.description);
+    product.save();
   res.redirect('/');
 };
 
 exports.getProducts = (req, res, next) => {
+    const products = Product.fetchAll()
+
   const shop = {
     catalogue: products,
     pageTitle: 'Shop',
