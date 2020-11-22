@@ -2,7 +2,7 @@
 const Product = require('../models/Product');
 
 exports.getAddProduct = (req, res, next) => {
-  res.render('add-product', {
+  res.render('admin/add-product', {
     pageTitle: 'Add Product',
     path: '/admin/add-product',
     activeProduct: true,
@@ -33,6 +33,6 @@ exports.getProducts = (req, res, next) => {
       activeAddProduct: true,
     };
 
-    res.render('shop', shop);
+    res.render('shop/product-list', shop);
   });
 };
