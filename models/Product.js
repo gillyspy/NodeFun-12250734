@@ -8,19 +8,22 @@ const p = path.join(
 );
 
 const getProductsFromFile = (cb) => {
-   fs.readFile(p, (err, fileContent) => {
-     if (!err) {
-       return cb(JSON.parse(fileContent));
-     } else {
-       return cb([]);
-     }
-   });
+  fs.readFile(p, (err, fileContent) => {
+    if (!err) {
+      return cb(JSON.parse(fileContent));
+    } else {
+      return cb([]);
+    }
+  });
 };
 
 module.exports = class Product {
-  constructor(t, d = 'TBD') {
+  constructor(t, d = 'TBD', u, p) {
     this.title = t;
     this.description = d;
+    this.url = u;
+    this.price = p;
+    this.id = Math.random().toString();
   }
 
   save() {
@@ -34,5 +37,12 @@ module.exports = class Product {
 
   static fetchAll(cb) {
     getProductsFromFile(cb);
+  }
+
+  static findById(prodId, cb) {
+    getProductsFromFile((products) => {
+      const product = products.find((p) => prodId === p.id);
+      cb(product);
+    });
   }
 };

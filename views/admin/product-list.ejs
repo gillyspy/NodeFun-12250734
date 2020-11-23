@@ -1,5 +1,35 @@
 <%- include('../includes/head.ejs') %>
 <body>
-    <%- include('../includes/navigation.ejs') %>
-<h1>admin products placeholder</h1>
-<%- include('../includes/end.ejs') %>
+  <%- include('../includes/navigation.ejs') %>
+  <main>
+    <% if (catalogue.length){ %>
+    <div class="grid">
+      <% catalogue.forEach( prod=>{ %>
+      <article class="card product-item">
+        <header class="card__header">
+          <h1 class="product__title"><%= prod.title %></h1>
+        </header>
+        <div class="card__image">
+          <img
+            src="<%= prod.url  || 'https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png' %>"
+            ,
+            alt="book"
+          />
+        </div>
+        <div class="card__content">
+          <h2 class="product__price">$<%= prod.price || 'n/a' %></h2>
+          <p class="product__description"><%= prod.description %></p>
+        </div>
+        <div class="card__actions">
+          <a href="/products/<%= prod.id %>" class="btn">Details</a>
+          <%- include('../includes/add-to-cart.ejs', { product : prod }) %>
+        </div>
+      </article>
+      <% }) %>
+    </div>
+    <% } else { %>
+    <h1>No Products Found!</h1>
+    <% } %>
+  </main>
+  <%- include('../includes/end.ejs') %>
+</body>

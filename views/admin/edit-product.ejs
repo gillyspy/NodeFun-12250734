@@ -1,5 +1,39 @@
 <%- include('../includes/head.ejs') %>
 <body>
-    <%- include('../includes/navigation.ejs') %>
-<h1>admin edit product placeholder</h1>
+<%- include('../includes/navigation.ejs') %>
+    <main>
+        <% if (catalogue.length){ %>
+        <div class="grid">
+        <% catalogue.forEach( prod=>{ %>
+        <article class="card product-item">
+            <header class="card__header">
+                <h1 class="product__title"><%= prod.title %><h1>
+                <div class="card__image">
+                    <img src="<%= prod.url  || 'https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png' %>" ,
+                        alt="book" />
+                </div>
+                <div class="card__content">
+                    <h2 class="product__price">
+                        $<%= prod.price || 'n/a' %>
+                    </h2>
+                    <p class="product__description">
+                        <%= prod.description %>
+                    </p>
+                </div>
+                <div class="card__actions">
+                    <a href="/admin/edit-product" class="btn">Edit</a>
+                    <!-- TODO: pass a parameter so we know which products we are editing -->
+                    <form action="/admin/delete-product" method="POST">
+                        <!-- TODO: create a delete route & pass a parameter -->
+                        <button class="btn" type="submit">Delete</button>
+                    </form>
+                </div>
+            </header>
+        </article>
+        <% }) %>
+    </div>
+    <% } else { %>
+    <h1>No Products Found!</h1>
+        <% } %>
+    </main>
 <%- include('../includes/end.ejs') %>
