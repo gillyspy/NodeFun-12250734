@@ -20,14 +20,14 @@ exports.postAddProduct = (req, res, next) => {
     req.body.price
   );
   product.save();
-  res.redirect('/');
+  res.redirect('/admin/add-product');
 };
-
 
 exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
   const prodId = req.params.productId;
   if (!editMode) {
+    console.log('missing editMode.... redirecting to /');
     return res.redirect('/');
   }
   Product.findById(prodId, (product) => {
@@ -56,6 +56,10 @@ exports.postEditProduct = (req, res, next) => {
   res.redirect('/');
 };
 
+exports.postDeleteProduct = (req, res, next) =>{
+  Product.deleteById( req.body.id) ;
+  res.redirect('/admin/product-list');
+};
 exports.getProducts = (req, res, next) => {
   Product.fetchAll((products) => {
     res.render('admin/product-list', {
@@ -63,12 +67,12 @@ exports.getProducts = (req, res, next) => {
       pageTitle: 'Admin Products',
       path: '/admin/product-list',
       size: products.length,
-      activeShop: true,
+      //activeShop: true,
       CSS: {
         formsCSS: true,
         productCSS: true,
       },
-      activeAddProduct: true,
+            //      activeAddProduct: true,
     });
   });
 };

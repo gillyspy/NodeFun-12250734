@@ -7,7 +7,7 @@ const p = path.join(
   'products.json'
 );
 
-const getProductsFromFile = (cb) => {
+const  getProductsFromFile =  (cb) => {
   fs.readFile(p, (err, fileContent) => {
     if (!err) {
       return cb(JSON.parse(fileContent));
@@ -54,5 +54,26 @@ module.exports = class Product {
       const product = products.find((p) => prodId === p.id);
       cb(product);
     });
+  }
+
+  static deleteById(prodId) {
+    //filter out the product and then re-write file
+    try {
+      if (!prodId) {
+        throw new Error('missing product id. Cannot do delete');
+      }
+      let filteredProducts=[];
+      getProductsFromFile((products) => {
+        filteredProducts = products.filter((p) => {
+          return (p.id != prodId)
+        });
+        fs.writeFile(p, JSON.stringify(filteredProducts), (err) => {
+          console.log(err);
+        });
+      });
+      
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
