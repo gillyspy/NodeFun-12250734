@@ -9,12 +9,12 @@ const p = path.join(
   'products.json'
 );
 
-const  getProductsFromFile =  (cb) => {
-  fs.readFile(p, (err, fileContent) => {
+let  getProductsFromFile = async (cb) => {
+  return fs.readFile(p, (err, fileContent) => {
     if (!err) {
-      return cb(JSON.parse(fileContent));
+       cb(JSON.parse(fileContent));
     } else {
-      return cb([]);
+       cb([]);
     }
   });
 };
@@ -52,10 +52,11 @@ module.exports = class Product {
   }
 
   static findById(prodId, cb) {
-    getProductsFromFile((products) => {
-      const product = products.find((prod) => prodId === prod.id);
+     return getProductsFromFile((products) => { 
+       const product = products.find((prod) =>  prodId === prod.id);
       cb(product);
     });
+
   }
 
   static deleteById(prodId) {
