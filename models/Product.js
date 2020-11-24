@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const Cart = require('./Cart');
+
 const p = path.join(
   path.dirname(require.main.filename),
   'data',
@@ -18,12 +20,12 @@ const  getProductsFromFile =  (cb) => {
 };
 
 module.exports = class Product {
-  constructor(t, d = 'TBD', u, p, id = null) {
+  constructor(t, d = 'TBD', u, price, id = null) {
     this.id = id;
     this.title = t;
     this.description = d;
     this.url = u;
-    this.price = p;
+    this.price = price;
   }
 
   save() {
@@ -51,7 +53,7 @@ module.exports = class Product {
 
   static findById(prodId, cb) {
     getProductsFromFile((products) => {
-      const product = products.find((p) => prodId === p.id);
+      const product = products.find((prod) => prodId === prod.id);
       cb(product);
     });
   }
@@ -64,13 +66,27 @@ module.exports = class Product {
       }
       let filteredProducts=[];
       getProductsFromFile((products) => {
-        filteredProducts = products.filter((p) => {
-          return (p.id != prodId)
+        let price=0;
+        
+        filteredProducts = products.filter((prod) =>{
+          if( prod.id == prodId){
+            price = prod.price; 
+            return false
+          } else {
+            return true
+          }
         });
-        fs.writeFile(p, JSON.stringify(filteredProducts), (err) => {
-          console.log(err);
-        });
+         fs.writeFile(p, JSON.stringify(filteredProducts), (err) => {
+            
+           if(err){
+             throw err;             
+           } else {
+             //delete from cart
+            Cart.deleteById(prodId, price);
+           }
+          });
       });
+
       
     } catch (e) {
       console.log(e);

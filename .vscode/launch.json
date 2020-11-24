@@ -13,8 +13,9 @@
       "request": "launch",
       "restart": true,
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
-   //   "runtimeArgs": ["--inspect"], // attach chrome with chrome://inspect and port 9229
-      "skipFiles": ["<node_internals>/**"],
+      //"runtimeargs" : ["--ignore \"*json*\""],
+      //"runtimeArgs": ["--inspect"], // attach chrome with chrome://inspect and port 9229
+      "skipFiles": ["<node_internals>/**", "data/**"],
       "type": "node", //,  //"pwa-node"
       "localRoot": "${workspaceFolder}",
       "autoAttachChildProcesses": true,
