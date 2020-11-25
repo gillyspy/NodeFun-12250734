@@ -8,7 +8,7 @@
       <li>
         <p><%= c.data.title + ' (' + c.qty +')' %></p>
         <form method="POST" action="/cart-delete-item">
-            <input type="hidden" name="productId" value="<%= c.id %>"/>
+            <input type="hidden" name="productId" value="<%= c._id %>"/>
           <button class="btn" type="submit">Delete</button>
         </form>
       </li>

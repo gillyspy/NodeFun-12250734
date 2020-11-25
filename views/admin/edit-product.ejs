@@ -40,7 +40,7 @@
         <textarea type="text" name="description" id="description" rows="5"><%= (editing ? product.description :'') %></textarea>
       </div>
       <% if(editing){ %>
-      <input type="hidden" name="id" value="<%= product.id %>" />
+      <input type="hidden" name="id" value="<%= product._id %>" />
       <% } %>
       <button type="submit"><%= (editing ? 'Update' : 'Add') %> Product</button>
       <!-- TODO: add in a form control with a delete button -->

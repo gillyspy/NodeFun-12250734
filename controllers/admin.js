@@ -18,6 +18,7 @@ exports.postAddProduct = (req, res, next) => {
     req.body.description,
     req.body.imageURL,
     req.body.price
+    //req.body.id
   );
   product.save().then( ()=>{
     res.redirect('/admin/add-product');
@@ -32,7 +33,7 @@ exports.getEditProduct = (req, res, next) => {
     console.log('missing editMode.... redirecting to /');
     return res.redirect('/');
   }
-  Product.findById(prodId, (product) => {
+  Product.findById(prodId).then( (product) => {
     console.log('getEditProduct', product, editMode);
     res.render('admin/edit-product', {
       pageTitle: 'Edit Product',
@@ -43,7 +44,9 @@ exports.getEditProduct = (req, res, next) => {
         formsCSS: true,
       },
     });
-  });
+  }).catch(err=>{
+    console.log(err);
+  })
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -54,27 +57,38 @@ exports.postEditProduct = (req, res, next) => {
     req.body.price,
     req.body.id
   );
-  product.save();
-  res.redirect('/admin/product-list');
+  product.save().then( result=>{
+    res.redirect('/admin/product-list');  
+  }).catch(err=>{
+    console.log(err);
+  })
+
 };
 
-exports.postDeleteProduct = (req, res, next) =>{
-  Product.deleteById( req.body.id) ;
-  res.redirect('/admin/product-list');
+exports.postDeleteProduct = (req, res, next) => {
+  Product.deleteById(req.body.id).then( () => {
+    res.redirect('/admin/product-list');
+  }).catch(err=>{
+    console.log(err);
+  })
 };
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render('admin/product-list', {
-      catalogue: products,
-      pageTitle: 'Admin Products',
-      path: '/admin/product-list',
-      size: products.length,
-      //activeShop: true,
-      CSS: {
-        formsCSS: true,
-        productCSS: true,
-      },
-            //      activeAddProduct: true,
+  Product.fetchAll()
+    .then((products) => {
+      res.render('admin/product-list', {
+        catalogue: products,
+        pageTitle: 'Admin Products',
+        path: '/admin/product-list',
+        size: products.length,
+        //activeShop: true,
+        CSS: {
+          formsCSS: true,
+          productCSS: true,
+        },
+        //      activeAddProduct: true,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
