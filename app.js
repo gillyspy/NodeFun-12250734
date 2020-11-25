@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 
 const rootDir = require("./util/path.js");
 
-const mongoConnect = require('./util/db.js');
+const mongoConnect = require('./util/db').mongoConnect;
 
 const app = express();
 
@@ -24,7 +24,6 @@ app.use(shopRoutes);
 
 //404
 app.use( Four04Controller.get404  );
-mongoConnect( client =>{
-  console.log( client ); 
+mongoConnect(() =>{
   app.listen(3000);
 });

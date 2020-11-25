@@ -1,96 +1,23 @@
-const fs = require('fs');
-const path = require('path');
+const getDb = require('../util/db').getDb;
 
-const Cart = require('./Cart');
-
-const p = path.join(
-  path.dirname(require.main.filename),
-  'data',
-  'products.json'
-);
-
-let  getProductsFromFile = async (cb) => {
-  return fs.readFile(p, (err, fileContent) => {
-    if (!err) {
-       cb(JSON.parse(fileContent));
-    } else {
-       cb([]);
-    }
-  });
-};
-
-module.exports = class Product {
-  constructor(t, d = 'TBD', u, price, id = null) {
-    this.id = id;
+class Product {
+  constructor(t, d = 'TBD', u, price, id = null) {    
     this.title = t;
     this.description = d;
     this.url = u;
     this.price = price;
+    this.id = id || Math.random().toString()
   }
 
-  save() {
-    getProductsFromFile((products) => {
-      if (this.id) {
-        // update (replace)
-        const productToUpdateIndex = products.findIndex(
-          (p) => p.id === this.id
-        );
-        products[productToUpdateIndex] = this;
-      } else {
-        //new
-        this.id = Math.random().toString();
-        products.push(this);
-      }
-      fs.writeFile(p, JSON.stringify(products), (err) => {
-        console.log(err);
-      });
-    });
+
+  save(){
+    const db = getDb();
+    db.collection('products').insertOne(this).then(result=>{
+      console.log(result); 
+    }).catch(err=>{
+      console.log(err);
+    })
+    //db.save();
   }
-
-  static fetchAll(cb) {
-    getProductsFromFile(cb);
-  }
-
-  static findById(prodId, cb) {
-     return getProductsFromFile((products) => { 
-       const product = products.find((prod) =>  prodId === prod.id);
-      cb(product);
-    });
-
-  }
-
-  static deleteById(prodId) {
-    //filter out the product and then re-write file
-    try {
-      if (!prodId) {
-        throw new Error('missing product id. Cannot do delete');
-      }
-      let filteredProducts=[];
-      getProductsFromFile((products) => {
-        let price=0;
-        
-        filteredProducts = products.filter((prod) =>{
-          if( prod.id == prodId){
-            price = prod.price; 
-            return false
-          } else {
-            return true
-          }
-        });
-         fs.writeFile(p, JSON.stringify(filteredProducts), (err) => {
-            
-           if(err){
-             throw err;             
-           } else {
-             //delete from cart
-            Cart.deleteById(prodId, price);
-           }
-          });
-      });
-
-      
-    } catch (e) {
-      console.log(e);
-    }
-  }
-};
+}
+module.exports = Product
