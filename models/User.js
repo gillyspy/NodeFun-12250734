@@ -29,7 +29,7 @@ class User {
     }); /**/
     const updatedCart = {
       items: [{
-        ...product,
+        productId : new mongodb.ObjectId(product._id),
         quantity: 1
       }]
     };
