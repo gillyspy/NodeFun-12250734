@@ -2,14 +2,14 @@
 <body>
   <%- include('../includes/navigation.ejs') %>
   <main>
-    <% if(cart.products.length){ %>
-    <ul>
-      <% for(c of cart.products){ %>
-      <li>
-        <p><%= c.data.title + ' (' + c.qty +')' %></p>
+    <% if(cart.length){ %>
+    <ul class="cart__item-list">
+      <% for(c of cart){ %>
+      <li class=""cart__item">
+        <p><%= c.title + ' (' + c.quantity +')' %></p>
         <form method="POST" action="/cart-delete-item">
             <input type="hidden" name="productId" value="<%= c._id %>"/>
-          <button class="btn" type="submit">Delete</button>
+          <button class="btn danger" type="submit">Delete Items</button>
         </form>
       </li>
       <% } %>
