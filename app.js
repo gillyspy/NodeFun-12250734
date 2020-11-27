@@ -13,7 +13,7 @@ app.set("views", process.cwd() + "/views");
 
 const adminData = require("./routes/admin.js");
 const shopRoutes = require("./routes/shop.js");
-
+const authRoutes = require("./routes/auth.js");
 
 const Four04Controller = require('./controllers/404.js');
 
@@ -32,6 +32,7 @@ app.use( ( req, res, next)=>{
 
 
 app.use("/admin", adminData.routes);
+app.use("/auth", authRoutes.routes);
 app.use(shopRoutes);
 
 //404
