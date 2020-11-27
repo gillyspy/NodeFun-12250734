@@ -1,5 +1,24 @@
 <%- include('../includes/head.ejs') %>
 <body>
-    <%- include('../includes/navigation.ejs') %>
-<h1>Orders placeholder</h1>
+<%- include('../includes/navigation.ejs') %>
+<main>
+    <% if(orders.length){ %>
+        <ul class="orders">
+            <% for(o of orders){ %>
+                <li class="orders__item">
+                    <h1>Order - #<%= o._id.toString().substring(10) %></h1>
+                    <ul class="orders__products">
+                        <% o.items.forEach( p =>{ %>
+                        <li class="orders__products-item"><%= p.title %> (<%= p.quantity %>)</li>
+                        <% }) %>
+                    </ul>
+                </li>
+            <% } %>
+        </ul>
+        <br/>
+    <% } else { %>
+
+        <h1>No Orders Yet</h1>
+    <% } %>
+</main>
 <%- include('../includes/end.ejs') %>

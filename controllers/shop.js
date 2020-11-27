@@ -114,11 +114,19 @@ exports.getCheckout = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
+  req.user.getOrders().then(orders=>{
   res.render('shop/orders', {
     pageTitle: 'Orders',
     path     : '/orders',
-    CSS      : {},
+    orders : orders,
+    CSS      : {
+      ordersCSS : true
+    }
   });
+  }).catch(err=>{
+    console.log(err)
+  });
+
 };
 
 

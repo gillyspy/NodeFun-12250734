@@ -117,6 +117,18 @@ class User {
     });
   }
 
+  getOrders() {
+    const db = getDb();
+
+    return db.collection('orders').find({
+      user: {
+        _id     : mongodb.ObjectId(this._id),
+        username: this.username,
+        email   : this.email
+      }
+    }).toArray();
+  }
+
   static findById(userId) {
     const db = getDb();
     userId = new mongodb.ObjectId(userId);
