@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/styles/main.css">
     <% if( CSS.formsCSS ){ %>
-        <link rel="stylesheet" href="/styles/forms.css" />
-    <% } 
-     if( CSS.productCSS ){ %>
-        <link rel="stylesheet" href="/styles/product.css" />
+        <link rel="stylesheet" href="/styles/forms.css"/>
+    <% }
+    if( CSS.cartCSS ){ %>
+        <link rel="stylesheet" href="/styles/cart.css"/>
+    <% }
+    if( CSS.productCSS ){ %>
+        <link rel="stylesheet" href="/styles/product.css"/>
     <% } %>
 </head>
 

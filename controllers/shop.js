@@ -77,7 +77,8 @@ exports.getCart = (req, res, next) => {
           path     : '/cart',
           cart     : products,
           CSS      : {
-            formsCSS : true
+            formsCSS: true,
+            cartCSS : true
           },
         });
       });
@@ -115,7 +116,17 @@ exports.getCheckout = (req, res, next) => {
 exports.getOrders = (req, res, next) => {
   res.render('shop/orders', {
     pageTitle: 'Orders',
-    path: '/orders',
-    CSS: {},
+    path     : '/orders',
+    CSS      : {},
   });
+};
+
+
+exports.postOrder = (req, res, next) => {
+  req.user.addOrder().then(result => {
+    res.redirect('/orders')
+  }).catch(err => {
+    console.log(err);
+  });
+
 };

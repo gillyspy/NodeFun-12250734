@@ -24,11 +24,10 @@ class User {
     const updatedCart = this.cart;
     let isMissing = true;
     //look in existing cart
-    const cartProduct = this.cart.items.findIndex(item => {
+    this.cart.items.findIndex(item => {
       if (item.productId.toString() === product._id.toString()) {
         item.quantity++;
         isMissing = false;
-        return;
         // update qty
       }
     });
@@ -82,6 +81,40 @@ class User {
         }, {
           $set: {cart: this.cart}
         });
+  }
+
+  addOrder() {
+    const db = getDb();
+
+    return this.getCart().then(products => {
+      //add cart products to the order db
+      products.forEach((product, i, a) => {
+        let {description: _, url: __, userid: ___, ...temp_order} = product;
+        a[i] = temp_order;
+      });
+      console.log(products);
+
+      const temp_order = {
+        items: products,
+        user : {
+          _id     : mongodb.ObjectId(this._id),
+          username: this.username,
+          email   : this.email
+        }
+      };
+      //migrate cart into orders
+      return db.collection('orders').insertOne(temp_order)
+    }).then(result => {
+      //reset the cart in the session
+      this.cart = {items : []};
+      //reset user's cart in the database
+      return db.collection('users')
+          .updateOne({
+            _id: mongodb.ObjectId(this._id)
+          }, {
+            $set: {cart: this.cart}
+          });
+    });
   }
 
   static findById(userId) {
