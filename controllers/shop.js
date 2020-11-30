@@ -9,6 +9,7 @@ exports.getProducts = (req, res, next) => {
         path: '/products',
         size: products.length,
         activeShop: true,
+        isAuthenticated : req.isLoggedIn,
         CSS: {
           formsCSS: true,
           productCSS: true,
@@ -29,6 +30,7 @@ exports.getProduct = (req, res, next) => {
     res.render('shop/product-detail', {
       product: product,
       pageTitle: product.title,
+      isAuthenticated : req.isLoggedIn,
       CSS: {
         formsCSS: true,
         productCSS: true,
@@ -52,6 +54,7 @@ exports.getIndex = (req, res, next) => {
       path: '/',
       size: products.length,
       activeShop: true,
+      isAuthenticated : req.isLoggedIn,
       CSS: {
         formsCSS: true,
         productCSS: true,
@@ -76,6 +79,7 @@ exports.getCart = (req, res, next) => {
           pageTitle: 'Cart',
           path     : '/cart',
           cart     : products,
+          isAuthenticated : req.isLoggedIn,
           CSS      : {
             formsCSS: true,
             cartCSS : true
@@ -109,6 +113,7 @@ exports.getCheckout = (req, res, next) => {
   res.render('shop/checkout', {
     pageTitle: 'Checkout',
     path: '/checkout',
+    isAuthenticated : req.isLoggedIn,
     CSS: {},
   });
 };
@@ -119,6 +124,7 @@ exports.getOrders = (req, res, next) => {
     pageTitle: 'Orders',
     path     : '/orders',
     orders : orders,
+    isAuthenticated : req.isLoggedIn,
     CSS      : {
       ordersCSS : true
     }
