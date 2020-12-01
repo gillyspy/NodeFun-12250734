@@ -15,6 +15,19 @@ exports.getLogin = (req, res, next) => {
   });
 }
 
+exports.getSignup = (req, res, next)=>{
+  //TODO:
+  res.render('auth/signup', {
+    pageTitle : 'SignUp',
+    path : '/signup',
+    isAuthenticated : req.session.isLoggedIn,
+    CSS : {
+      formsCSS : true,
+      authCSS : true
+    }
+  })
+}
+
 exports.postLogin = (req, res, next) => {
   res.setHeader('Set-Cookie', 'loggedIn=true; HttpOnly');
   //TODO: fix this fake login process
@@ -39,5 +52,10 @@ exports.postLogout = (req, res, next) => {
     console.log(err);
     res.redirect('/');
   });
+
+}
+
+exports.postSignup = (req, res, next) =>{
+  //TODO:
 
 }
