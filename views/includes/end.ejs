@@ -2,5 +2,6 @@
 <% if (locals.alertError && locals.alertError.msg){ %>
     <script>window.alert("<%= locals.alertError.msg  %>");</script>
 <% } %>
+<span><%= locals.username ? username : '' %></span>
 </body>
 </html>

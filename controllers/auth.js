@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const url = require('url');
 
 exports.getLogin = (req, res, next) => {
   // const isLoggedIn = req.get('Cookie').split('=')[1] === 'true';
@@ -11,6 +12,7 @@ exports.getLogin = (req, res, next) => {
     alertError     : {
       msg: req.query.error
     },
+    username       : false,
     CSS            : {
       formsCSS: true,
       authCSS : true
@@ -43,25 +45,40 @@ exports.postLogin = (req, res, next) => {
   //TODO: fix this fake login process
   User.findByEmail(email, password) // '5fbed4dec2bfe2c8fe8db3d4')
     .then(user => {
-
-      req.session.isLoggedIn = true;
-      if( user === null){
-        e= 'Credentials do not match';
-        res.redirect('/auth/login?error='+encodeURIComponent(e));
+      if (user === null) {
+        throw new Error('User not found');
       } else {
         req.session.user = user;
-        req.session.save(err => {
+      }
+      return user.checkPassword(password);
+    })
+    .then(isAuthenticated => {
+      req.session.isLoggedIn = isAuthenticated;
+      if (isAuthenticated) {
+        return req.session.save(err => {
           if (err) {
             console.log(err);
-            return err;
+            throw err;
           }
-          res.redirect('/');
-
         });
+      } else {
+        req.session.user = null;
+        throw new Error('credentials do not match');
       }
-    }).catch(err => {
-    console.log(err);
-  });
+    })
+    .then( (thing)=>{
+      console.log('thing',thing);
+      res.redirect('/');
+    })
+    .catch(err => {
+      res.redirect(url.format({
+        pathname: '/auth/login',
+        query   : {
+          error: err.message || 'unknown'
+        }
+      }));
+    })
+
 }
 
 exports.postLogout = (req, res, next) => {
@@ -75,34 +92,65 @@ exports.postLogout = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
   //TODO: add validation
   const email = req.body.email;
-  const password = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
-  //does user already exist
+  const {password, confirmPassword} = {
+    _ : req.body.password,
+    __: req.body.confirmPassword
+  };
+
   User.findByEmail(email).then((user) => {
-    //null is good
-    if (user === null && password === confirmPassword) {
+    if (user === null) {
+      //continue
+      return req.body.password === req.body.confirmPassword;
       const user = new User(email, email);
-      if( user.save(password)) {
-        req.session.isLoggedIn = true;
-        req.session.user = user;
-        req.session.save(err => {
-          if (err) {
-            console.log(err);
-            return err;
-          }
-          res.redirect('/');
-        });
-      }
-      //add user to db (email a verification? )
-    } else { // (user !== null){
-      const e = encodeURIComponent('User already exists');
-      res.redirect('/auth/signup?error='+e);
-      //message that username is already in use
+      return user.save(password); //true
     }
-    //res.redirect('/');
-  }).catch(err => {
+    throw new Error('User already exists');
+    return false;
+  })
+    .then(keepGoing => {
+      const user = new User(email, email);
+      return user.save(password);
+    })
+    .then(keepGoing => {
+      console.log(keepGoing);
+      if (keepGoing) {
+        res.redirect(url.format({
+          pathname: '/auth/login'
+        }));
+      } else {
+        throw Error('something went wrong')
+      }
+    }).catch(err => {
     console.log(err);
+    res.redirect(url.format({
+        pathname: '/auth/signup',
+        query   : {
+          error: (err.message || '')
+        }
+      })
+    );
+  });
+}
+/*
+then(save => {
+  req.session.isLoggedIn = true;
+  req.session.user = user;
+  req.session.save(err => {
+    if (err) {
+      console.log(err);
+      return err;
+    }
     res.redirect('/');
   });
-
+}).catch(err => {
+  console.log(err);
+  res.redirect('/');
+});
 }
+)
+
+console.log(password, confirmPassword);
+//does user already exist
+
+
+}*/

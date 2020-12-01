@@ -4,14 +4,15 @@ exports.getProducts = (req, res, next) => {
   Product.fetchAll()
     .then((products) => {
       const shop = {
-        catalogue: products,
-        pageTitle: 'All Products',
-        path: '/products',
-        size: products.length,
-        activeShop: true,
-        isAuthenticated : req.session.isLoggedIn,
-        CSS: {
-          formsCSS: true,
+        catalogue      : products,
+        pageTitle      : 'All Products',
+        path           : '/products',
+        size           : products.length,
+        activeShop     : true,
+        isAuthenticated: req.session.isLoggedIn,
+        username       : req.session.user.username,
+        CSS            : {
+          formsCSS  : true,
           productCSS: true,
         },
       };
@@ -28,14 +29,15 @@ exports.getProduct = (req, res, next) => {
   console.log(prodId);
   Product.findById(prodId).then((product) => {
     res.render('shop/product-detail', {
-      product: product,
-      pageTitle: product.title,
-      isAuthenticated : req.session.isLoggedIn,
-      CSS: {
-        formsCSS: true,
+      product        : product,
+      pageTitle      : product.title,
+      isAuthenticated: req.session.isLoggedIn,
+      username       : req.session.user.username,
+      CSS            : {
+        formsCSS  : true,
         productCSS: true,
       },
-      path: '/products',
+      path           : '/products',
     });
     console.log('productId', product);
   }).catch(err=>{
@@ -49,14 +51,15 @@ exports.getIndex = (req, res, next) => {
   Product.fetchAll()
   .then((products) => {
     const shop = {
-      catalogue: products,
-      pageTitle: 'Shop',
-      path: '/',
-      size: products.length,
-      activeShop: true,
+      catalogue       : products,
+      pageTitle       : 'Shop',
+      path            : '/',
+      size            : products.length,
+      activeShop      : true,
       isAuthenticated : req.session.isLoggedIn,
-      CSS: {
-        formsCSS: true,
+      username        : req.session.user ? req.session.user.username: '',
+      CSS             : {
+        formsCSS  : true,
         productCSS: true,
       },
       activeAddProduct: true,
@@ -76,11 +79,12 @@ exports.getCart = (req, res, next) => {
       .then(products => {
         console.log('Cart Products to Display', products);
         res.render('shop/cart', {
-          pageTitle: 'Cart',
-          path     : '/cart',
-          cart     : products,
-          isAuthenticated : req.session.isLoggedIn,
-          CSS      : {
+          pageTitle      : 'Cart',
+          path           : '/cart',
+          cart           : products,
+          isAuthenticated: req.session.isLoggedIn,
+          username       : req.session.user.username,
+          CSS            : {
             formsCSS: true,
             cartCSS : true
           },
@@ -114,6 +118,7 @@ exports.getCheckout = (req, res, next) => {
     pageTitle: 'Checkout',
     path: '/checkout',
     isAuthenticated : req.session.isLoggedIn,
+    username : req.session.user.username,
     CSS: {},
   });
 };
@@ -125,6 +130,7 @@ exports.getOrders = (req, res, next) => {
     path     : '/orders',
     orders : orders,
     isAuthenticated : req.session.isLoggedIn,
+    username : req.session.user.username,
     CSS      : {
       ordersCSS : true
     }

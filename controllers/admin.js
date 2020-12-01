@@ -2,12 +2,13 @@ const Product = require('../models/Product');
 
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
-    pageTitle: 'Add Product',
-    path: '/admin/add-product',
-    editing: false,
-    activeProduct: true,
-    isAuthenticated : req.session.isLoggedIn,
-    CSS: {
+    pageTitle      : 'Add Product',
+    path           : '/admin/add-product',
+    editing        : false,
+    activeProduct  : true,
+    isAuthenticated: req.session.isLoggedIn,
+    username       : req.session.user.username,
+    CSS            : {
       formsCSS: true,
     },
   });
@@ -39,12 +40,13 @@ exports.getEditProduct = (req, res, next) => {
   Product.findById(prodId).then( (product) => {
     console.log('getEditProduct', product, editMode);
     res.render('admin/edit-product', {
-      pageTitle: 'Edit Product',
-      path: '/admin/edit-product',
-      editing: editMode,
-      product: product,
-      isAuthenticated : req.session.isLoggedIn,
-      CSS: {
+      pageTitle      : 'Edit Product',
+      path           : '/admin/edit-product',
+      editing        : editMode,
+      product        : product,
+      isAuthenticated: req.session.isLoggedIn,
+      username       : req.session.user.username,
+      CSS            : {
         formsCSS: true,
       },
     });
@@ -80,14 +82,15 @@ exports.getProducts = (req, res, next) => {
   Product.fetchAll()
     .then((products) => {
       res.render('admin/product-list', {
-        catalogue: products,
-        pageTitle: 'Admin Products',
-        path: '/admin/product-list',
-        size: products.length,
-        isAuthenticated : req.session.isLoggedIn,
+        catalogue      : products,
+        pageTitle      : 'Admin Products',
+        path           : '/admin/product-list',
+        size           : products.length,
+        isAuthenticated: req.session.isLoggedIn,
+        username       : req.session.user.username,
         //activeShop: true,
-        CSS: {
-          formsCSS: true,
+        CSS            : {
+          formsCSS  : true,
           productCSS: true,
         },
         //      activeAddProduct: true,

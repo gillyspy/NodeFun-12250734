@@ -1,5 +1,6 @@
 const mongodb = require('mongodb');
 const getDb = require('../util/db').getDb;
+const bcrypt = require('bcryptjs');
 
 class User {
 
@@ -18,13 +19,21 @@ class User {
     const updatedUser = {...this};
 
     if (password) {
-      updatedUser.password = password;
+      updatedUser.password = bcrypt.hash(password,12);
     } else {
       throw Error('no password given');
     }
     updatedUser._id = new mongodb.ObjectId(updatedUser._id);
     this._id = updatedUser._id;
     return db.collection('users').insertOne(updatedUser);
+  }
+
+  checkPassword( password ){
+    const db = getDb();
+    const userId = new mongodb.ObjectId(this._id);
+    return db.collection('users').findOne({_id: userId}).then(user => {
+      return bcrypt.compare( password, user.password );
+    });
   }
 
   addToCart(product) {
@@ -96,6 +105,7 @@ class User {
         });
   }
 
+
   addOrder() {
     const db = getDb();
 
@@ -153,9 +163,9 @@ class User {
   static findByEmail(email, password = null) {
     const db = getDb();
     const searchObj = {email: {$eq: email}};
-    if( password ){
+    /*if( password ){
       searchObj.password = {$eq : password};
-    }
+    }*/
     return db.collection('users').findOne(searchObj).then(user => {
       console.log(user);
       if (user === null) {
