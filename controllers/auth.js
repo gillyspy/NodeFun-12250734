@@ -1,25 +1,33 @@
+const User = require('../models/User');
+
 exports.getLogin = (req, res, next) => {
-   // const isLoggedIn = req.get('Cookie').split('=')[1] === 'true';
-console.log(req.session, req.session.isLoggedIn);
-const isLoggedIn = req.session.isLoggedIn;
-    if( isLoggedIn){
-        res.redirect('/');
-    } else {
-        res.render('auth/login', {
-            pageTitle      : 'Login',
-            path           : '/login',
-            isAuthenticated: false,
-            CSS            : {
-                formsCSS: true,
-                authCSS : true
-            }
-        });
+  // const isLoggedIn = req.get('Cookie').split('=')[1] === 'true';
+  console.log(req.session, req.session.isLoggedIn);
+  req.session = null;
+  res.render('auth/login', {
+    pageTitle      : 'Login',
+    path           : '/login',
+    isAuthenticated: false,
+    CSS            : {
+      formsCSS: true,
+      authCSS : true
     }
+  });
 }
 
-exports.postLogin = (req, res, next) =>{
-    res.setHeader('Set-Cookie','loggedIn=true; HttpOnly');
-    req.session.isLoggedIn = true;
-    //assume all users can login for now
-    res.redirect('/');
+exports.postLogin = (req, res, next) => {
+  res.setHeader('Set-Cookie', 'loggedIn=true; HttpOnly');
+  //TODO: fix this fake login process
+  User.findById('5fbed4dec2bfe2c8fe8db3d4')
+    .then(user => {
+      req.session.isLoggedIn = true;
+      req.session.user = user;
+      res.redirect('/');
+    }).catch(err => {
+    console.log(err);
+  });
+
+
+  //assume all users can login for now
+
 }

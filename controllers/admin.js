@@ -6,7 +6,7 @@ exports.getAddProduct = (req, res, next) => {
     path: '/admin/add-product',
     editing: false,
     activeProduct: true,
-    isAuthenticated : req.isLoggedIn,
+    isAuthenticated : req.session.isLoggedIn,
     CSS: {
       formsCSS: true,
     },
@@ -20,7 +20,7 @@ exports.postAddProduct = (req, res, next) => {
     req.body.imageURL,
     req.body.price,
     null,
-    req.user._id
+    req.session.user._id
     //req.body.id
   );
   product.save().then( ()=>{
@@ -43,7 +43,7 @@ exports.getEditProduct = (req, res, next) => {
       path: '/admin/edit-product',
       editing: editMode,
       product: product,
-      isAuthenticated : req.isLoggedIn,
+      isAuthenticated : req.session.isLoggedIn,
       CSS: {
         formsCSS: true,
       },
@@ -84,7 +84,7 @@ exports.getProducts = (req, res, next) => {
         pageTitle: 'Admin Products',
         path: '/admin/product-list',
         size: products.length,
-        isAuthenticated : req.isLoggedIn,
+        isAuthenticated : req.session.isLoggedIn,
         //activeShop: true,
         CSS: {
           formsCSS: true,

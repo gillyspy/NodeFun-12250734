@@ -4,16 +4,12 @@ const MongoClient = mongodb.MongoClient;
 /*****************/
 /***** database config ***/
 const options = require('./options');
-const config = {
-        host: options.storageConfig.host,
-        username: options.storageConfig.username,
-        password: options.storageConfig.password
-};
+const dbConfig = options.configOptions.db;
 let _db;
 
 const mongoConnect = (callback) => {
   const uri =
-    'mongodb+srv://'+config.username+':'+config.password+'@'+config.host+'/shop?retryWrites=true&w=majority';
+    'mongodb+srv://'+dbConfig.username+':'+dbConfig.password+'@'+dbConfig.host+'/shop?retryWrites=true&w=majority';
   const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

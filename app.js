@@ -2,21 +2,18 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const User = require('./models/User');
-const rootDir = require("./util/path.js");
 const options = require('./util/options');
-const config = {
-        host: options.storageConfig.host,
-        username: options.storageConfig.username,
-        password: options.storageConfig.password
-};
-const MONGODBURI =
-    'mongodb+srv://'+config.username+':'+config.password+'@'+config.host+'/shop';
+const dbConfig = options.configOptions.db;
+const secretConfig = options.configOptions.secret;
 
+const MONGODBURI =
+  'mongodb+srv://' + dbConfig.username
+  + ':' + dbConfig.password
+  + '@' + dbConfig.host + '/shop';
 
 const mongoConnect = require('./util/db').mongoConnect;
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
-
 
 const app = express();
 const store = MongoDBStore({
@@ -33,33 +30,34 @@ const authRoutes = require("./routes/auth.js");
 
 const Four04Controller = require('./controllers/404.js');
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, "pub")));
 app.use(session({
-  secret : "kwijibo",
-  resave : false,
-  saveUninitialized : false,
-  store : store
+  secret           : secretConfig,
+  resave           : false,
+  saveUninitialized: false,
+  store            : store
 }));
 
-app.use( ( req, res, next)=>{
-  User.findById('5fbed4dec2bfe2c8fe8db3d4').then( user=>{
-    req.user = new User( user.username, user.email, user._id, user.cart );
-    next();
-  }).catch(err=>{
-    console.log(err);    
-  });
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
+    .then(user => {
+      req.session.isLoggedIn = true;
+      req.session.user = user;
+      next();
+    });
 });
-
-
 
 app.use("/admin", adminData.routes);
 app.use("/auth", authRoutes.routes);
 app.use(shopRoutes);
 
 //404
-app.use( Four04Controller.get404  );
-mongoConnect(() =>{
+app.use(Four04Controller.get404);
+mongoConnect(() => {
 
   app.listen(3000);
 });

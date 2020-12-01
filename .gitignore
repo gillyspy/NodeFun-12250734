@@ -117,3 +117,4 @@ dist
 
 # db config
 .mongodb.config.json
+/util/.session-secret.json

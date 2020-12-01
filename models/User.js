@@ -132,7 +132,9 @@ class User {
   static findById(userId) {
     const db = getDb();
     userId = new mongodb.ObjectId(userId);
-    return db.collection('users').findOne({_id: userId})
+    return db.collection('users').findOne({_id: userId}).then( user =>{
+      return new User(user.username,user.email,user._id);
+    })
   }
 }
 

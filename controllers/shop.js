@@ -9,7 +9,7 @@ exports.getProducts = (req, res, next) => {
         path: '/products',
         size: products.length,
         activeShop: true,
-        isAuthenticated : req.isLoggedIn,
+        isAuthenticated : req.session.isLoggedIn,
         CSS: {
           formsCSS: true,
           productCSS: true,
@@ -30,7 +30,7 @@ exports.getProduct = (req, res, next) => {
     res.render('shop/product-detail', {
       product: product,
       pageTitle: product.title,
-      isAuthenticated : req.isLoggedIn,
+      isAuthenticated : req.session.isLoggedIn,
       CSS: {
         formsCSS: true,
         productCSS: true,
@@ -54,7 +54,7 @@ exports.getIndex = (req, res, next) => {
       path: '/',
       size: products.length,
       activeShop: true,
-      isAuthenticated : req.isLoggedIn,
+      isAuthenticated : req.session.isLoggedIn,
       CSS: {
         formsCSS: true,
         productCSS: true,
@@ -72,14 +72,14 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  req.user.getCart()
+  req.session.user.getCart()
       .then(products => {
         console.log('Cart Products to Display', products);
         res.render('shop/cart', {
           pageTitle: 'Cart',
           path     : '/cart',
           cart     : products,
-          isAuthenticated : req.isLoggedIn,
+          isAuthenticated : req.session.isLoggedIn,
           CSS      : {
             formsCSS: true,
             cartCSS : true
@@ -92,7 +92,7 @@ exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findById(prodId).then(product => {
     console.log('add to cart');
-    return req.user.addToCart(product);
+    return req.session.user.addToCart(product);
     // Cart.addProduct(prodId, product.price);
   }).then(result => {
     console.log(result);
@@ -103,7 +103,7 @@ exports.postCart = (req, res, next) => {
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const id = req.body.productId;
-  req.user.deleteItemFromCart(id).then(result=>{
+  req.session.user.deleteItemFromCart(id).then(result=>{
     console.log('deletedItemFromCart');
     res.redirect('/cart');
   });
@@ -113,18 +113,18 @@ exports.getCheckout = (req, res, next) => {
   res.render('shop/checkout', {
     pageTitle: 'Checkout',
     path: '/checkout',
-    isAuthenticated : req.isLoggedIn,
+    isAuthenticated : req.session.isLoggedIn,
     CSS: {},
   });
 };
 
 exports.getOrders = (req, res, next) => {
-  req.user.getOrders().then(orders=>{
+  req.session.user.getOrders().then(orders=>{
   res.render('shop/orders', {
     pageTitle: 'Orders',
     path     : '/orders',
     orders : orders,
-    isAuthenticated : req.isLoggedIn,
+    isAuthenticated : req.session.isLoggedIn,
     CSS      : {
       ordersCSS : true
     }
@@ -137,7 +137,7 @@ exports.getOrders = (req, res, next) => {
 
 
 exports.postOrder = (req, res, next) => {
-  req.user.addOrder().then(result => {
+  req.session.user.addOrder().then(result => {
     res.redirect('/orders')
   }).catch(err => {
     console.log(err);
