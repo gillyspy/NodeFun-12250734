@@ -1,3 +1,6 @@
 <script src="/js/main.js"></script>
-  </body>
+<% if (locals.alertError && locals.alertError.msg){ %>
+    <script>window.alert("<%= locals.alertError.msg  %>");</script>
+<% } %>
+</body>
 </html>

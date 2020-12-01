@@ -40,17 +40,18 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
-  if (!req.session.user) {
-    return next();
+  if (req.session && req.session.user && req.session.user._id){
+    User.findById(req.session.user._id)
+      .then(user => {
+        req.session.isLoggedIn = true;
+        req.session.user = user;
+        next();
+      }).catch(err => {
+      console.log(err)
+    });
+  } else {
+    next();
   }
-  User.findById(req.session.user._id)
-    .then(user => {
-      req.session.isLoggedIn = true;
-      req.session.user = user;
-      next();
-    }).catch(err => {
-    console.log(err)
-  });
 });
 
 app.use("/admin", adminData.routes);

@@ -13,10 +13,18 @@ class User {
     this.cart = cart;
   }
 
-  save() {
+  save(password) {
     const db = getDb();
-    this.id = new mongodb.ObjectId(this.id);
-    return db.collection('users').insertOne(this);
+    const updatedUser = {...this};
+
+    if (password) {
+      updatedUser.password = password;
+    } else {
+      throw Error('no password given');
+    }
+    updatedUser._id = new mongodb.ObjectId(updatedUser._id);
+    this._id = updatedUser._id;
+    return db.collection('users').insertOne(updatedUser);
   }
 
   addToCart(product) {
@@ -137,8 +145,24 @@ class User {
   static findById(userId) {
     const db = getDb();
     userId = new mongodb.ObjectId(userId);
-    return db.collection('users').findOne({_id: userId}).then( user =>{
-      return new User(user.username,user.email,user._id, user.cart);
+    return db.collection('users').findOne({_id: userId}).then(user => {
+      return new User(user.username, user.email, user._id, user.cart);
+    })
+  }
+
+  static findByEmail(email, password = null) {
+    const db = getDb();
+    const searchObj = {email: {$eq: email}};
+    if( password ){
+      searchObj.password = {$eq : password};
+    }
+    return db.collection('users').findOne(searchObj).then(user => {
+      console.log(user);
+      if (user === null) {
+        return user;
+      } else {
+        return new User(user.username, user.email, user._id, user.cart);
+      }
     })
   }
 }
