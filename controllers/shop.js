@@ -95,7 +95,7 @@ exports.postCart = (req, res, next) => {
     return req.session.user.addToCart(product);
     // Cart.addProduct(prodId, product.price);
   }).then(result => {
-    console.log(result);
+   // console.log(result);
     res.redirect('/products');
     //res.redirect('/cart');
   });

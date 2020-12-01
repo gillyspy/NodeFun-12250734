@@ -48,7 +48,9 @@ app.use((req, res, next) => {
       req.session.isLoggedIn = true;
       req.session.user = user;
       next();
-    });
+    }).catch(err => {
+    console.log(err)
+  });
 });
 
 app.use("/admin", adminData.routes);

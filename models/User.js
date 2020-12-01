@@ -24,9 +24,11 @@ class User {
     const updatedCart = this.cart;
     let isMissing = true;
     //look in existing cart
-    this.cart.items.findIndex(item => {
+    this.cart.items.forEach(item => {
       if (item.productId.toString() === product._id.toString()) {
         item.quantity++;
+        item.price = +product.price;
+        updatedCart.totalPrice+= +product.price;
         isMissing = false;
         // update qty
       }
@@ -35,9 +37,12 @@ class User {
       // was missing => add it
       updatedCart.items.push({
         productId: new mongodb.ObjectId(product._id),
+        price : +product.price,
         quantity : 1
       });
+      updatedCart.totalPrice+= +product.price;
     }
+    console.log(updatedCart);
 
     const db = getDb();
     return db.collection('users').updateOne(
@@ -133,7 +138,7 @@ class User {
     const db = getDb();
     userId = new mongodb.ObjectId(userId);
     return db.collection('users').findOne({_id: userId}).then( user =>{
-      return new User(user.username,user.email,user._id);
+      return new User(user.username,user.email,user._id, user.cart);
     })
   }
 }
