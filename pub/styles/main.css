@@ -200,9 +200,22 @@ form {
   border-radius: 3px;
   cursor: pointer;
 }
+.btn-nav {
+  display: inline-block;
+  padding : 0;
+  text-decoration: none;
+  font: inherit;
+  border: 0px solid #00695c;
+  background-color: #00695c;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+}
 
 .btn:hover,
-.btn:active {
+.btn:active,
+.btn-nav:hover,
+.btn-nav:active {
   background-color: #00695c;
   color: white;
 }

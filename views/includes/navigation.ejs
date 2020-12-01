@@ -29,6 +29,11 @@
             <li class="main-header__items">
                 <a class="<%= path=== '/auth/login' ? 'active' : ''%>" href="/auth/login">Login</a>
             </li>
+            <li class="main-header__items">
+                <form action="/auth/logout" method="POST">
+                    <button class="btn-nav" type="submit">Logout</button>
+                </form>
+            </li>
         </ul>
     </nav>
 </header>
