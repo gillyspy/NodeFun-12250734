@@ -6,8 +6,6 @@ exports.getAddProduct = (req, res, next) => {
     path           : '/admin/add-product',
     editing        : false,
     activeProduct  : true,
-    isAuthenticated: req.session.isLoggedIn,
-    username       : req.session.user.username,
     CSS            : {
       formsCSS: true,
     },
@@ -44,8 +42,6 @@ exports.getEditProduct = (req, res, next) => {
       path           : '/admin/edit-product',
       editing        : editMode,
       product        : product,
-      isAuthenticated: req.session.isLoggedIn,
-      username       : req.session.user.username,
       CSS            : {
         formsCSS: true,
       },
@@ -86,8 +82,6 @@ exports.getProducts = (req, res, next) => {
         pageTitle      : 'Admin Products',
         path           : '/admin/product-list',
         size           : products.length,
-        isAuthenticated: req.session.isLoggedIn,
-        username       : req.session.user.username,
         //activeShop: true,
         CSS            : {
           formsCSS  : true,

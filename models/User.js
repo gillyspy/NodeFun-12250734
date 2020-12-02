@@ -19,13 +19,15 @@ class User {
     const updatedUser = {...this};
 
     if (password) {
-      updatedUser.password = bcrypt.hash(password,12);
+      updatedUser._id = new mongodb.ObjectId(updatedUser._id);
+      this._id = updatedUser._id
+      return bcrypt.hash(password, 12).then(password => {
+        updatedUser.password = password;
+        return db.collection('users').insertOne(updatedUser);
+      })
     } else {
       throw Error('no password given');
     }
-    updatedUser._id = new mongodb.ObjectId(updatedUser._id);
-    this._id = updatedUser._id;
-    return db.collection('users').insertOne(updatedUser);
   }
 
   checkPassword( password ){

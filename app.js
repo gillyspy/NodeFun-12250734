@@ -5,6 +5,7 @@ const User = require('./models/User');
 const options = require('./util/options');
 const dbConfig = options.configOptions.db;
 const secretConfig = options.configOptions.secret;
+const csrfProtection = require('csurf')();
 
 const MONGODBURI =
   'mongodb+srv://' + dbConfig.username
@@ -38,9 +39,42 @@ app.use(session({
   saveUninitialized: false,
   store            : store
 }));
+app.use(csrfProtection);
 
 app.use((req, res, next) => {
-  if (req.session && req.session.user && req.session.user._id){
+  // initialize appData for the requests
+  req.appData = req.appData || {};
+  if (!req.appData.sessionDefaults) {
+    req.appData.sessionDefaults = {
+      username: 'anonymous',
+      email   : ''
+    }
+  }
+  if (!res.locals.sessionData) {
+    res.locals.sessionData = {
+      sessionfooter: req.appData.sessionDefaults,
+      kwijibo      : 'kwijibo'
+    }
+  }
+
+  res.locals.isAuthenticated = req.session ? req.session.isLoggedIn : false;
+
+  if (!req.session.isLoggedIn) {
+    res.locals.sessionData.sessionfooter = req.appData.sessionDefaults;
+  } else {
+    //if logged in include data with key login info
+    res.locals.sessionData.sessionfooter = {
+      username: req.session.user.username,
+      email   : req.session.user.email
+    }
+  }
+  res.locals.csrfToken = req.csrfToken();
+
+  next();
+});
+
+app.use((req, res, next) => {
+  if (req.session && req.session.user && req.session.user._id) {
     User.findById(req.session.user._id)
       .then(user => {
         req.session.isLoggedIn = true;
@@ -48,6 +82,7 @@ app.use((req, res, next) => {
         next();
       }).catch(err => {
       console.log(err)
+      next();
     });
   } else {
     next();

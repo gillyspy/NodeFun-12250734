@@ -2,28 +2,34 @@
 <body>
 <%- include('../includes/navigation.ejs') %>
 <main>
-  <% if(cart.length){ %>
-    <ul class="cart__item-list">
-      <% for(c of cart){ %>
-        <li class="cart__item">
-          <h1><%= c.title %></h1>
-          <h2>Quantity: <%= c.quantity %></h2>
-          <form method="POST" action="/cart-delete-item">
-            <input type="hidden" name="productId" value="<%= c._id %>"/>
-            <button class="btn danger" type="submit">Delete Items</button>
-          </form>
-        </li>
-      <% } %>
-    </ul>
-    <br/>
-    <div>
-      <form action="/create-order" method="POST">
-        <button class="btn" type="submit">Checkout Now!</button>
-      </form>
-    </div>
-  <% } else { %>
+    <% if(cart.length){ %>
+        <ul class="cart__item-list">
+            <% for(c of cart){ %>
+                <li class="cart__item">
+                    <h1><%= c.title %></h1>
+                    <h2>Quantity: <%= c.quantity %></h2>
+                    <form method="POST" action="/cart-delete-item">
+                        <input type="hidden" name="productId" value="<%= c._id %>"/>
+                        <% if(locals.csrfToken){ %>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+                        <% } %>
+                        <button class="btn danger" type="submit">Delete Items</button>
+                    </form>
+                </li>
+            <% } %>
+        </ul>
+        <br/>
+        <div>
+            <form action="/create-order" method="POST">
+                <% if(locals.csrfToken){ %>
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+                <% } %>
+                <button class="btn" type="submit">Checkout Now!</button>
+            </form>
+        </div>
+    <% } else { %>
         <h1>No Products in Cart!</h1>
     <% } %>
-  </main>
-  <%- include('../includes/end.ejs') %>
+</main>
+<%- include('../includes/end.ejs') %>
 </body>

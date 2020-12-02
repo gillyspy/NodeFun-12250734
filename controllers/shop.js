@@ -9,8 +9,6 @@ exports.getProducts = (req, res, next) => {
         path           : '/products',
         size           : products.length,
         activeShop     : true,
-        isAuthenticated: req.session.isLoggedIn,
-        username       : req.session.user.username,
         CSS            : {
           formsCSS  : true,
           productCSS: true,
@@ -31,8 +29,6 @@ exports.getProduct = (req, res, next) => {
     res.render('shop/product-detail', {
       product        : product,
       pageTitle      : product.title,
-      isAuthenticated: req.session.isLoggedIn,
-      username       : req.session.user.username,
       CSS            : {
         formsCSS  : true,
         productCSS: true,
@@ -56,8 +52,6 @@ exports.getIndex = (req, res, next) => {
       path            : '/',
       size            : products.length,
       activeShop      : true,
-      isAuthenticated : req.session.isLoggedIn,
-      username        : req.session.user ? req.session.user.username: '',
       CSS             : {
         formsCSS  : true,
         productCSS: true,
@@ -82,8 +76,6 @@ exports.getCart = (req, res, next) => {
           pageTitle      : 'Cart',
           path           : '/cart',
           cart           : products,
-          isAuthenticated: req.session.isLoggedIn,
-          username       : req.session.user.username,
           CSS            : {
             formsCSS: true,
             cartCSS : true
@@ -115,24 +107,20 @@ exports.postCartDeleteProduct = (req, res, next) => {
 
 exports.getCheckout = (req, res, next) => {
   res.render('shop/checkout', {
-    pageTitle: 'Checkout',
-    path: '/checkout',
-    isAuthenticated : req.session.isLoggedIn,
-    username : req.session.user.username,
-    CSS: {},
+    pageTitle      : 'Checkout',
+    path           : '/checkout',
+    CSS            : {}
   });
 };
 
 exports.getOrders = (req, res, next) => {
   req.session.user.getOrders().then(orders=>{
   res.render('shop/orders', {
-    pageTitle: 'Orders',
-    path     : '/orders',
-    orders : orders,
-    isAuthenticated : req.session.isLoggedIn,
-    username : req.session.user.username,
-    CSS      : {
-      ordersCSS : true
+    pageTitle      : 'Orders',
+    path           : '/orders',
+    orders         : orders,
+    CSS            : {
+      ordersCSS: true
     }
   });
   }).catch(err=>{

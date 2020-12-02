@@ -10,6 +10,14 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
+div.footer hr{
+  border : .1 rem solid lightgray;
+}
+div.footer {
+  color: lightgray;
+  font-style: italic;
+}
+
 main {
   padding: 1rem;
   margin: auto;
@@ -60,13 +68,8 @@ form {
   padding: 0;
 }
 
-.main-header__items a {
-  text-decoration: none;
-  color: white;
-}
-
 .main-header__items a,
-.main-header__item button {
+.main-header__items button {
   font: inherit;
   background: transparent;
   border: none;
@@ -74,13 +77,12 @@ form {
   color: white;
   cursor: pointer;
 }
-
 .main-header__items a:hover,
 .main-header__items a:active,
 .main-header__items a.active,
-.main-header__item button:hover,
-.main-header__item button:active {
-  color: #ffeb3b;
+.main-header__items button:hover,
+.main-header__items button:active {
+  color: #ffeb3b !important;
 }
 
 .mobile-nav {

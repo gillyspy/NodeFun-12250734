@@ -1,7 +1,9 @@
 <script src="/js/main.js"></script>
 <% if (locals.alertError && locals.alertError.msg){ %>
-    <script>window.alert("<%= locals.alertError.msg  %>");</script>
+    <script>window.alert("<%= locals.alertError.msg %>");</script>
 <% } %>
-<span><%= locals.username ? username : '' %></span>
-</body>
+<div class="footer">
+    <hr/>
+    <span class="footer"><%= locals.sessionData ? sessionData.sessionfooter.username + ' (' + sessionData.sessionfooter.email + ')' : '' %></span>
+</div></body>
 </html>

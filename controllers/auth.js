@@ -7,8 +7,7 @@ exports.getLogin = (req, res, next) => {
   req.session = null;
   res.render('auth/login', {
     pageTitle      : 'Login',
-    path           : '/login',
-    isAuthenticated: false,
+    path           : '/auth/login',
     alertError     : {
       msg: req.query.error
     },
@@ -21,15 +20,14 @@ exports.getLogin = (req, res, next) => {
 }
 
 exports.getSignup = (req, res, next)=>{
-
   //TODO:
   res.render('auth/signup', {
     pageTitle      : 'SignUp',
-    path           : '/signup',
-    isAuthenticated: req.session ? !!req.session.isLoggedIn : false,
+    path           : '/auth/signup',
     alertError     : {
       msg: req.query.error
     },
+    sessionData : req.sessionData,
     CSS            : {
       formsCSS: true,
       authCSS : true
@@ -101,21 +99,22 @@ exports.postSignup = (req, res, next) => {
     if (user === null) {
       //continue
       return req.body.password === req.body.confirmPassword;
-      const user = new User(email, email);
-      return user.save(password); //true
     }
     throw new Error('User already exists');
     return false;
   })
     .then(keepGoing => {
       const user = new User(email, email);
-      return user.save(password);
+      return user.save(req.body.password);
     })
     .then(keepGoing => {
       console.log(keepGoing);
       if (keepGoing) {
         res.redirect(url.format({
-          pathname: '/auth/login'
+          pathname: '/auth/login',
+          query : {
+            error : 'User created. Please log in'
+          }
         }));
       } else {
         throw Error('something went wrong')

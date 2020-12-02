@@ -37,6 +37,9 @@
             <% } else { %>
                 <li class="main-header__items">
                     <form action="/auth/logout" method="POST">
+                        <% if(locals.csrfToken){ %>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+                        <% } %>
                         <button class="btn-nav" type="submit">Logout</button>
                     </form>
                 </li>
@@ -81,6 +84,9 @@
         <% } else { %>
             <li class="mobile-nav__item">
                 <form action="/auth/logout" method="POST">
+                    <% if(locals.csrfToken){ %>
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+                    <% } %>
                     <button class="btn-nav" type="submit">Logout</button>
                 </form>
 
