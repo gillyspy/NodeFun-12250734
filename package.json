@@ -12,6 +12,20 @@
     "type": "git",
     "url": "git+https://github.com/gillyspy/NodeFun-12250734.git"
   },
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": [
+      "data/*json",
+      ".git",
+      "node_modules/**/node_modules"
+    ],
+    "watch": [
+      "views/",
+      "controllers/",
+      "routes/"
+    ],
+    "ext": "js,json,ejs,css"
+  },
   "author": "Gerald Gillespie",
   "license": "ISC",
   "bugs": {
@@ -24,6 +38,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^2.4.1",
     "csurf": "^1.11.0",
     "ejs": "^3.1.5",
@@ -31,6 +46,8 @@
     "express-handlebars": "^3.0.2",
     "express-session": "^1.17.1",
     "mongodb": "^3.6.3",
+    "nodemailer": "^6.4.16",
+    "nodemailer-sendgrid-transport": "^0.2.0",
     "pug": "^3.0.0"
   },
   "prettier": {

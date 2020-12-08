@@ -6,19 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/styles/main.css">
-    <% if( CSS.formsCSS ){ %>
+    <% if( locals.CSS && CSS.formsCSS ){ %>
         <link rel="stylesheet" href="/styles/forms.css"/>
     <% }
-    if( CSS.cartCSS ){ %>
+    if( locals.CSS && CSS.cartCSS ){ %>
         <link rel="stylesheet" href="/styles/cart.css"/>
     <% }
-    if( CSS.authCSS ){ %>
+    if( locals.CSS && CSS.authCSS ){ %>
         <link rel="stylesheet" href="/styles/auth.css"/>
     <% }
-    if( CSS.ordersCSS ){ %>
+    if( locals.CSS && CSS.ordersCSS ){ %>
         <link rel="stylesheet" href="/styles/orders.css"/>
     <% }
-    if( CSS.productCSS ){ %>
+    if( locals.CSS && CSS.productCSS ){ %>
         <link rel="stylesheet" href="/styles/product.css"/>
     <% } %>
 </head>

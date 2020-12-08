@@ -6,6 +6,7 @@ const options = require('./util/options');
 const dbConfig = options.configOptions.db;
 const secretConfig = options.configOptions.secret;
 const csrfProtection = require('csurf')();
+const flash = require('connect-flash');
 
 const MONGODBURI =
   'mongodb+srv://' + dbConfig.username
@@ -40,6 +41,7 @@ app.use(session({
   store            : store
 }));
 app.use(csrfProtection);
+app.use(flash());
 
 app.use((req, res, next) => {
   // initialize appData for the requests
