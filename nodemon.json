@@ -1,3 +1,14 @@
 {
-	"ignore" : ["data/*json"]
+	"restartable": "rs",
+	"ignore": [
+		"data/*json",
+		".git",
+		"node_modules/**/node_modules"
+	],
+	"watch": [
+		"views/",
+		"controllers/",
+		"routes/"
+	],
+	"ext": "js,json,ejs,css"
 }
