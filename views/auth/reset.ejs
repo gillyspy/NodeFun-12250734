@@ -1,0 +1,32 @@
+<%- include('../includes/head.ejs') %>
+<body>
+<%- include('../includes/navigation.ejs') %>
+
+<main>
+    <% if(locals.alertError && alertError.msg.length > 0){ %>
+        <div class="user-message user-message--error">
+            <%= alertError.msg %>
+        </div>
+    <% } %>
+    <form class="login-form"
+            method="POST"
+            action="/auth/reset"
+    >
+        <div class="form-control">
+            <label for="email">Email</label>
+            <input
+                    type="text"
+                    name="email"
+                    id="email"
+                    placeholder="registered email address"
+                    value=""
+            />
+        </div>
+        <% if(locals.csrfToken){ %>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+        <% } %>
+        <button type="submit">Reset</button>
+
+    </form>
+</main>
+<%- include('../includes/end.ejs') %>

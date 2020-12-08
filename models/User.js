@@ -7,27 +7,57 @@ class User {
   constructor(username, email, id = null, cart = {
     items     : [],
     totalPrice: 0
-  }) {
+  }, resetToken = null, resetTokenExpiration) {
     this.username = username;
     this.email = email;
     this._id = id;
     this.cart = cart;
+    //this.resetToken = resetToken;
+    //this.resetTokenExpiration= resetTokenExpiration;
   }
 
-  save(password) {
+  save(password, operation) {
     const db = getDb();
-    const updatedUser = {...this};
+    var updatedUser={};
+    switch(true) {
+      case (password && operation === 'reset'):
+        //update of password
+        updatedUser._id = new mongodb.ObjectId(this._id);
+        updatedUser.$unset = {
+          resetToken          : "",
+          resetTokenExpiration: 1
+        }
+        return bcrypt.hash(password, 12).then(password => {
+          updatedUser.$set = {password: password}
+          const { _id,... _user } =  updatedUser
+          console.log(updatedUser, _user )
+          return db.collection('users').updateOne({
+            _id : updatedUser._id
+          }, _user );
+        });
+        break;
+      case !!password :
+        //insert
+        updatedUser._id = new mongodb.ObjectId(updatedUser._id);
+        this._id = updatedUser._id
+        return bcrypt.hash(password, 12).then(password => {
+          updatedUser.password = password;
+          return db.collection('users').insertOne(updatedUser);
+        })
+      break;
+      default:
 
-    if (password) {
-      updatedUser._id = new mongodb.ObjectId(updatedUser._id);
-      this._id = updatedUser._id
-      return bcrypt.hash(password, 12).then(password => {
-        updatedUser.password = password;
-        return db.collection('users').insertOne(updatedUser);
-      })
-    } else {
-      throw Error('no password given');
-    }
+      updatedUser = {...this}
+      const { _id, ... _user } = updatedUser;
+      //update otherwise
+      return db.collection('users').updateOne(  {
+          _id: this._id
+        },
+        {
+          $set: _user
+        } );
+      break;
+    }//switch
   }
 
   checkPassword( password ){
@@ -152,6 +182,14 @@ class User {
         email   : this.email
       }
     }).toArray();
+  }
+
+  static findOne( obj ){
+    const db = getDb();
+    //this.userId = new mongodb.ObjectId(userId);
+    return db.collection('users').findOne( obj ).then(user => {
+      return new User(user.username, user.email, user._id, user.cart);
+    })
   }
 
   static findById(userId) {
