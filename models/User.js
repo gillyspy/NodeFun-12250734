@@ -188,7 +188,11 @@ class User {
     const db = getDb();
     //this.userId = new mongodb.ObjectId(userId);
     return db.collection('users').findOne( obj ).then(user => {
-      return new User(user.username, user.email, user._id, user.cart);
+      if( user ) {
+        return new User(user.username, user.email, user._id, user.cart);
+      } else {
+        return null
+      }
     })
   }
 

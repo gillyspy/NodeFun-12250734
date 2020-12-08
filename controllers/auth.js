@@ -53,21 +53,27 @@ exports.getNewPassword = (req, res, next) => {
     resetTokenExpiration: {$gt: Date.now()}
   })
     .then((user) => {
-      res.render('auth/new-password', {
-        path      : '/auth/new-password',
-        pageTitle : 'Reset Password',
-        userId    : user._id.toString(),
-        email : user.email,
-        alertError: {
-          msg: req.flash('info') //req.query.error
-        },
-        CSS : {
-          formsCSS : true,
-          authCSS : true
-        }
-      })
+      if( user) {
+        res.render('auth/new-password', {
+          path      : '/auth/new-password',
+          pageTitle : 'Reset Password',
+          userId    : user._id.toString(),
+          email     : user.email,
+          alertError: {
+            msg: req.flash('info') //req.query.error
+          },
+          CSS       : {
+            formsCSS: true,
+            authCSS : true
+          }
+        })
+      } else {
+        console.log('no user')
+        res.redirect('/')
+      }
     }).catch(err => {
     console.log(err);
+            res.redirect('/')
   })
 }
 
@@ -86,11 +92,13 @@ exports.postNewPassword = (req,res,next)=>{
     .then( result =>{
       if( result ) {
         req.flash('info', 'Password Updated. Please login');
-        res.redirect('/auth/login');
       }
+        res.redirect('/auth/login');
+
     })
     .catch(err =>{
       console.log(err);
+      res.redirect('/auth/login');
     })
 }
 
