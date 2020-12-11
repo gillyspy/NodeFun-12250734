@@ -4,6 +4,7 @@ const url = require('url');
 
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
+const {validationResult} = require('express-validator')
 
 const sendGridOptions = require('../util/options').sendGridOptions;
 
@@ -215,53 +216,60 @@ exports.postLogout = (req, res, next) => {
 }
 
 exports.postSignup = (req, res, next) => {
-  //TODO: add validation
   const email = req.body.email;
   const {password, confirmPassword} = {
     _ : req.body.password,
     __: req.body.confirmPassword
   };
-
-  User.findByEmail(email).then((user) => {
-    if (user === null) {
-      //continue
-      return req.body.password === req.body.confirmPassword;
-    }
-    throw new Error('User already exists');
-    return false;
-  })
-    .then(keepGoing => {
-      const user = new User(email, email);
-      return user.save(req.body.password);
-    })
-    .then(keepGoing => {
-      console.log(keepGoing);
-      if (keepGoing) {
-        transporter.sendMail({
-          to     : email,
-          from   : sendGridOptions.sender,
-          subject: 'Your new shop account',
-          html   : `<h1>You successfully signed up!</h1>`
-        });
-        res.redirect(url.format({
-          pathname: '/auth/login',
-          query   : {
-            error: 'User created. Please log in'
-          }
-        }));
-      } else {
-        throw Error('something went wrong')
+  const {errors} = validationResult(req);
+  if (errors.length) {
+    return res.status(422).render('auth/signup', {
+      path      : '/signup',
+      pageTitle : 'Signup',
+      alertError: {
+        msg: errors.pop().msg
+      },
+      CSS       : {
+        formsCSS: true,
+        authCSS : true
       }
-    }).catch(err => {
-    console.log(err);
-    res.redirect(url.format({
-        pathname: '/auth/signup',
-        query   : {
-          error: (err.message || '')
+    })
+  } else {
+    const user = new User(email, email);
+    return user.save(req.body.password)
+      .then(keepGoing => {
+          console.log(keepGoing);
+          req.flash('success', 'User Created. Please Log In');
+          if (keepGoing) {
+            transporter.sendMail({
+              to     : email,
+              from   : sendGridOptions.sender,
+              subject: 'Your new shop account',
+              html   : `<h1>You successfully signed up!</h1>`
+            });
+            //no need to wait for the email to be sent
+            res.redirect(url.format({
+              pathname: '/auth/login',
+              query   : {
+                error: req.flash('success') //'User created. Please log in'
+              }
+            }));
+          } else {
+            throw Error('something went wrong')
+          }
         }
-      })
-    );
-  });
+      )
+      .catch(err => {
+        console.log(err);
+        res.redirect(url.format({
+            pathname: '/auth/signup',
+            query   : {
+              error: (err.message || '')
+            }
+          })
+        );
+      });
+  }
 }
 /*
 then(save => {
