@@ -143,7 +143,6 @@ exports.postReset = (req, res, next) => {
   })
 }
 
-
 exports.getSignup = (req, res, next) => {
   //TODO:
   res.render('auth/signup', {
@@ -165,7 +164,26 @@ exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   let e;
-  //TODO: fix this fake login process
+  const {errors} = validationResult(req);
+
+  if (errors.length) {
+    return res.status(422).render('auth/login', {
+      path      : '/login',
+      pageTitle : 'Login',
+      alertError: {
+        msg: errors.pop().msg
+      },
+      CSS       : {
+        formsCSS: true,
+        authCSS : true
+      },
+      seed      : {
+        email          : email,
+        password       : password
+      },
+      errors : errors
+    })
+  }
   User.findByEmail(email, password) // '5fbed4dec2bfe2c8fe8db3d4')
     .then(user => {
       if (user === null) {
@@ -222,7 +240,7 @@ exports.postSignup = (req, res, next) => {
     __: req.body.confirmPassword
   };
   const {errors} = validationResult(req);
-  if (errors.length) {
+    if (errors.length) {
     return res.status(422).render('auth/signup', {
       path      : '/signup',
       pageTitle : 'Signup',
@@ -232,7 +250,13 @@ exports.postSignup = (req, res, next) => {
       CSS       : {
         formsCSS: true,
         authCSS : true
-      }
+      },
+      seed      : {
+        email          : email,
+        password       : password,
+        confirmPassword: confirmPassword
+      },
+      errors : errors
     })
   } else {
     const user = new User(email, email);
@@ -271,26 +295,3 @@ exports.postSignup = (req, res, next) => {
       });
   }
 }
-/*
-then(save => {
-  req.session.isLoggedIn = true;
-  req.session.user = user;
-  req.session.save(err => {
-    if (err) {
-      console.log(err);
-      return err;
-    }
-    res.redirect('/');
-  });
-}).catch(err => {
-  console.log(err);
-  res.redirect('/');
-});
-}
-)
-
-console.log(password, confirmPassword);
-//does user already exist
-
-
-}*/

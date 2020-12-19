@@ -15,19 +15,21 @@
         <div class="form-control">
             <label for="email">Email</label>
             <input
+                    class="<%= locals.errors && errors.find(e=> { return e.param === 'email'}) ? 'invalid' : '' %>"
                     type="text"
                     name="email"
                     id="email"
-                    value=""
+                    value="<%=locals.seed ? seed.email : '' %>"
             />
         </div>
         <div class="form-control">
             <label for="password"">Password</label>
             <input
+                    class="<%= locals.errors && errors.find(e=>{ return e.param === 'password'}) ? 'invalid' : '' %>"
                     type="password"
                     name="password"
                     id="password"
-                    value=""
+                    value="<%= locals.seed ? seed.password : '' %>"
             />
         </div>
         <% if(locals.csrfToken){ %>

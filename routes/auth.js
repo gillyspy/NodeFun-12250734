@@ -5,33 +5,60 @@ const authController = require('../controllers/auth');
 
 const router = express.Router();
 
-router.get('/login', authController.getLogin)
-router.get('/signup', authController.getSignup)
-router.post('/login', authController.postLogin)
-router.post('/logout', authController.postLogout)
-router.post('/signup', [
-    body('email').isEmail().withMessage('Email is invalid').bail()
-      .custom(email => {
-        return User.findByEmail(email).then(user => {
-          if (user) {
-            return Promise.reject('User already exists')
-          }
-          return true;
-        })
-      }).withMessage('User already exists!'),
-    body('password', 'Password must be > 5 numbers and characters')
+const rules = {
+  email : opts =>{
+    const {field,msg} = Object.assign({
+      msg:'Email is invalid'
+    },opts );
+    return body(field).isEmail()
+      .withMessage(msg)
+  },
+  password : opts =>{
+    const {field,msg} = Object.assign({
+      msg:'Password must be > 5 numbers and characters'
+    },opts );
+    return body(field, msg)
       .isLength({
         min: 5,
         max: 10
       })
-      .isAlphanumeric(),
-    body('confirmPassword').custom((value, {req}) => {
+      .isAlphanumeric()
+  },
+  /*
+  o.field
+  o.msg
+   */
+  password2 : opts => {
+    const {field,msg} = Object.assign({msg:'Passwords do not match'},opts )
+    return body(field).custom((value, {req}) => {
         if (value !== req.body.password) {
-          throw new Error('Passwords do not match');
+          throw new Error(msg);
         }
         return true;
       }
-    )],
+    )
+  }
+}
+
+router.get('/login', authController.getLogin)
+router.get('/signup', authController.getSignup)
+router.post('/login', [
+    rules.email({field : 'email'}).bail(),
+    rules.password({field : 'password'})],
+  authController.postLogin)
+router.post('/logout', authController.postLogout)
+router.post('/signup', [
+    rules.email({field : 'email'}).bail()
+      .custom(email => {
+        return User.findByEmail(email).then(user => {
+          if (user) {
+            return Promise.reject(messages[1])
+          }
+          return true;
+        })
+      }).withMessage( 'User already exists!'),
+    rules.password({field : 'password'}),
+    rules.password2({field : 'confirmPassword'})],
 //check('password').matches()
   authController.postSignup
 )

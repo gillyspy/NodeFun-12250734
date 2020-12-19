@@ -39,3 +39,7 @@ button:active {
   background-color: blue;
   color: white;
 }
+
+.form-control input.invalid {
+  border-color : red;
+}

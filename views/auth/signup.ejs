@@ -10,15 +10,19 @@
         <form class="login-form" action="/auth/signup" method="POST">
             <div class="form-control">
                 <label for="email">E-Mail</label>
-                <input type="email" name="email" id="email">
+                <input
+                        class="<%= locals.errors && errors.find(e=> { return e.param === 'email'}) ? 'invalid' : '' %>"
+                        type="email" name="email" id="email" value="<%= locals.seed? seed.email : '' %>">
             </div>
             <div class="form-control">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password">
+                <input class="<%= locals.errors && errors.find(e=>{ return  e.param === 'password'}) ? 'invalid' : '' %>"
+                        type="password" name="password" id="password" value="<%= locals.seed? seed.password : '' %>">
             </div>
             <div class="form-control">
                 <label for="confirmPassword">Confirm Password</label>
-                <input type="password" name="confirmPassword" id="confirmPassword">
+                <input class="<%= locals.errors && errors.find(e=>{ return e.param === 'confirmPassword'}) ? 'invalid' : '' %>"
+                       type="password" name="confirmPassword" id="confirmPassword" value="<%= locals.seed ? seed.confirmPassword : '' %>">
             </div>
             <% if(locals.csrfToken){ %>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
