@@ -30,7 +30,7 @@ const adminData = require("./routes/admin.js");
 const shopRoutes = require("./routes/shop.js");
 const authRoutes = require("./routes/auth.js");
 
-const Four04Controller = require('./controllers/404.js');
+const errorController = require('./controllers/error.js');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, "pub")));
@@ -79,15 +79,18 @@ app.use((req, res, next) => {
   if (req.session && req.session.user && req.session.user._id) {
     User.findById(req.session.user._id)
       .then(user => {
+        if (!user) {
+          return next();
+        }
         req.session.isLoggedIn = true;
         req.session.user = user;
         next();
-      }).catch(err => {
-      console.log(err)
-      next();
-    });
+      })
+      .catch(err => {
+        throw new Error(err)
+      });
   } else {
-    next();
+    return next();
   }
 });
 
@@ -95,8 +98,16 @@ app.use("/admin", adminData.routes);
 app.use("/auth", authRoutes.routes);
 app.use(shopRoutes);
 
+app.get('/500', errorController.get500);
+app.use( (error, req, res, next)=>{
+  console.log('********************************', error);
+  //TODO: refactor this to handle different error types / codes
+  res.redirect('/500')
+});
 //404
-app.use(Four04Controller.get404);
+app.use(errorController.get404);
+
+
 mongoConnect(() => {
 
   app.listen(3000);

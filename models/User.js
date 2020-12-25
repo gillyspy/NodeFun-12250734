@@ -30,7 +30,7 @@ class User {
         return bcrypt.hash(password, 12).then(password => {
           updatedUser.$set = {password: password}
           const { _id,... _user } =  updatedUser
-          console.log(updatedUser, _user )
+//          console.log(updatedUser, _user )
           return db.collection('users').updateOne({
             _id : updatedUser._id
           }, _user );
@@ -41,8 +41,8 @@ class User {
         updatedUser._id = new mongodb.ObjectId(updatedUser._id);
         this._id = updatedUser._id
         return bcrypt.hash(password, 12).then(password => {
-          updatedUser.password = password;
-          return db.collection('users').insertOne(updatedUser);
+          this.password = password;
+          return db.collection('users').insertOne(this);
         })
       break;
       default:

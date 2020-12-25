@@ -47,6 +47,7 @@ exports.getEditProduct = (req, res, next) => {
     });
   }).catch(err=>{
     console.log(err);
+    return next(err);
   })
 };
 
@@ -61,14 +62,14 @@ exports.postEditProduct = (req, res, next) => {
     userid     : req.session.user._id
   });
   //must be able to find one that already exists
-  Product.findById(_product._id)
+  Product.findById(_product.id)
     .then(product => {
       //product.prepIdForDb( product._id );
       if (!product) {
         //no allowed to update
         req.flash('error', 'Could not find product to edit');
         return res.redirect('/admin/product-list');
-      } else if (product.userid != _product.userid) {
+      } else if (product.userid.toString() != _product.userid.toString()) {
         req.flash('error', 'You don\'t have permissions for that product');
         return res.redirect('/admin/product-list');
       }
@@ -78,10 +79,13 @@ exports.postEditProduct = (req, res, next) => {
       return _product.save()
     })
     .then(result => {
+
       console.log('Edit result', result);
       res.redirect('/admin/product-list');
     }).catch(err => {
-    console.log(err);
+      console.log(err);
+      const error = new Error('Error editing product ' + _product.id);
+      return next(error);
   })
 
 };
@@ -93,7 +97,8 @@ exports.postDeleteProduct = (req, res, next) => {
   }).then(() => {
     res.redirect('/admin/product-list');
   }).catch(err => {
-    console.log(err);
+    console.log( 'postDeleteProduct');
+    return next(err);
   })
 };
 exports.getProducts = (req, res, next) => {
@@ -112,8 +117,9 @@ exports.getProducts = (req, res, next) => {
         //      activeAddProduct: true,
       });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch( err => {
+      console.log('getProducts');
+      return next(err)
     });
 };
 

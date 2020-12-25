@@ -17,8 +17,9 @@ exports.getProducts = (req, res, next) => {
       console.log('getProducts', products);
       res.render('shop/product-list', shop);
     })
-    .catch((err) => {
-      console.log(err);
+    .catch( err => {
+      console.log('error in getProducts');
+      return next(err);
     });
 };
 
@@ -36,8 +37,9 @@ exports.getProduct = (req, res, next) => {
       path           : '/products',
     });
     console.log('productId', product);
-  }).catch(err=>{
-    console.log(err);
+  }).catch( err => {
+    console.log('error in getProduct');
+    return next(err)
   });
 
   //res.redirect('/');
@@ -61,9 +63,10 @@ exports.getIndex = (req, res, next) => {
     console.log('Get Index', 'render index', products);
     res.render('shop/index', shop);
   })
-  .catch((err) => {
-    console.log(err);
-    res.end();
+  .catch( err => {
+    console.log('error in getIndex');
+    return next(err);
+    //res.end();
   });
   
 };
@@ -124,7 +127,8 @@ exports.getOrders = (req, res, next) => {
     }
   });
   }).catch(err=>{
-    console.log(err)
+    console.log('error in getOrders')
+    return next(err)
   });
 
 };
@@ -134,7 +138,8 @@ exports.postOrder = (req, res, next) => {
   req.session.user.addOrder().then(result => {
     res.redirect('/orders')
   }).catch(err => {
-    console.log(err);
+    console.log('error in postOrder');
+    return next(err);
   });
 
 };

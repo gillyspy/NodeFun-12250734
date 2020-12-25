@@ -15,6 +15,7 @@ const transporter = nodemailer.createTransport(sendgridTransport({
 }));
 
 exports.getLogin = (req, res, next) => {
+
   // const isLoggedIn = req.get('Cookie').split('=')[1] === 'true';
   res.render('auth/login', {
     pageTitle : 'Login',
@@ -73,33 +74,35 @@ exports.getNewPassword = (req, res, next) => {
         res.redirect('/')
       }
     }).catch(err => {
-    console.log(err);
-            res.redirect('/')
+    console.log('getNewPassword')
+    err.httpStatusCode = 500;
+    return next(err);
   })
 }
 
 exports.postNewPassword = (req,res,next)=>{
   // update password
-  User.findById( req.body.userId )
-    .then( user =>{
-      if( ! user ){
+  User.findById(req.body.userId)
+    .then(user => {
+      if (!user) {
         //TODO:
-        req.flash('info','User Not Found');
+        req.flash('info', 'User Not Found');
         res.redirect('/auth/login');
       }
-      return user.save( req.body.password, 'reset' )
+      return user.save(req.body.password, 'reset')
 
     })
-    .then( result =>{
-      if( result ) {
+    .then(result => {
+      if (result) {
         req.flash('info', 'Password Updated. Please login');
       }
-        res.redirect('/auth/login');
+      res.redirect('/auth/login');
 
     })
-    .catch(err =>{
-      console.log(err);
-      res.redirect('/auth/login');
+    .catch(err => {
+      console.log('postNewPassword', err);
+      err.httpStatusCode = 500;
+      return next(err);
     })
 }
 
@@ -137,7 +140,9 @@ exports.postReset = (req, res, next) => {
           res.redirect('/auth/login');
         })
         .catch(err => {
-          console.log('postReset', err);
+          console.log('postReset');
+          err.httpStatusCode = 500;
+          return next(err)
         })
     }
   })
@@ -222,7 +227,6 @@ exports.postLogin = (req, res, next) => {
           }));
         });
     });
-
 }
 
 exports.postLogout = (req, res, next) => {
