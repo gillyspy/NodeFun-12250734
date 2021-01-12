@@ -55,7 +55,7 @@ exports.getNewPassword = (req, res, next) => {
     resetTokenExpiration: {$gt: Date.now()}
   })
     .then((user) => {
-      if( user) {
+      if (user) {
         res.render('auth/new-password', {
           path      : '/auth/new-password',
           pageTitle : 'Reset Password',
@@ -73,11 +73,12 @@ exports.getNewPassword = (req, res, next) => {
         console.log('no user')
         res.redirect('/')
       }
-    }).catch(err => {
-    console.log('getNewPassword')
-    err.httpStatusCode = 500;
-    return next(err);
-  })
+    })
+    .catch(err => {
+      console.log('getNewPassword')
+      err.httpStatusCode = 500;
+      return next(err);
+    })
 }
 
 exports.postNewPassword = (req,res,next)=>{

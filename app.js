@@ -101,7 +101,10 @@ app.use(shopRoutes);
 app.get('/500', errorController.get500);
 app.use( (error, req, res, next)=>{
   console.log('********************************', error);
-  //TODO: refactor this to handle different error types / codes
+  /*
+  TODO: refactor this to handle different error types / codes
+  many controller functions are routing their errors here and this is generically redirecting them
+   */
   res.redirect('/500')
 });
 //404
